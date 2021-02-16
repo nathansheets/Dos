@@ -52,5 +52,6 @@ io.on('connection', (socket) => {
 });
 
 app.get('/', (req, res) => {
-    res.end();
+    console.log('Request received.');
+    req.end();
 })
