@@ -29,7 +29,8 @@ class App extends React.Component {
         socket.on('host', (x) => {
             console.log(x);
             this.setState({
-                isHost : true
+                isHost : true,
+                currentTurn: true
             });
         });
 
@@ -64,6 +65,9 @@ class App extends React.Component {
     }
 
     PlayCard(card) {
+        if (!this.state.currentTurn) {
+            return;
+        }
         let tempCards = this.state.cards;
         let index = tempCards.indexOf(card);
         tempCards.splice(index, 1);
