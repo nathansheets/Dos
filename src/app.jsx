@@ -117,7 +117,11 @@ class App extends React.Component {
 
     RenderPile() {
         if (this.state.pile.length > 0) {
-            return <Card card={this.state.pile[0]}/>
+            return (
+                <div id="pile">
+                    <Card card={this.state.pile[0]}/>
+                </div>
+            )
         }
     }
 

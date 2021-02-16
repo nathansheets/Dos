@@ -69,7 +69,7 @@
 #mainWindow {
     width: 98vw;
     height: 95vh;
-    background-color: lightgrey;
+    background-color: darkgray;
 }
 
 #hand {
@@ -88,6 +88,17 @@
 }
 
 #pileContainer {
-    pointer-events: none;
     display: flex;
+}
+
+#pile {
+    pointer-events: none;
+}
+
+#deck {
+    transition: none;
+}
+
+#deck:hover {
+    margin: 0;
 }

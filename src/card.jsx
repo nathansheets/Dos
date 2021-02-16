@@ -26,7 +26,7 @@ const Card = ({card, PlayCard}) => {
         )
     } else {
         return (
-            <div className="card" onClick={ClickHandler}>
+            <div className="card" id="deck" onClick={ClickHandler}>
                 <div className="cardFace" style={{backgroundColor:'black'}}>
                     <div className="innerCircle">.</div>
                     <div className="topLeft">
