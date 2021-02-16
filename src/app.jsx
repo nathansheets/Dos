@@ -14,7 +14,7 @@ class App extends React.Component {
             isHost : false,
             cards : [],
             pile : [],
-            currentTurn : 0
+            currentTurn : false
         };
     }
 
@@ -46,9 +46,15 @@ class App extends React.Component {
         socket.on('placeCard', (turn) => {
             let newPile = this.state.pile;
             newPile.unshift(turn.card);
+
+            let isThisTurn = false;
+
+            if (turn.currentTurn === this.state.playerID) {
+                isThisTurn = true;
+            }
             this.setState({
                 pile : newPile,
-                currentTurn : turn.playerID
+                currentTurn : isThisTurn
             });
         })
     }
@@ -58,6 +64,13 @@ class App extends React.Component {
     }
 
     PlayCard(card) {
+        let tempCards = this.state.cards;
+        let index = tempCards.indexOf(card);
+        tempCards.splice(index, 1);
+        this.setState({
+            cards: tempCards
+        });
+
         var turn = {
             card: card,
             player: this.state.playerID
@@ -71,10 +84,17 @@ class App extends React.Component {
         }
     }
 
+    RenderTurnIndicator() {
+        if (this.state.currentTurn) {
+            return <div>It's your turn!</div>
+        }
+    }
+
     render() {
         return (
             <div id="mainWindow">
                 <StartButton isHost={this.state.isHost} StartGame={this.StartGame}/>
+                {this.RenderTurnIndicator()}
                 <div id="pileContainer">
                     {this.RenderPile()}
                 </div>

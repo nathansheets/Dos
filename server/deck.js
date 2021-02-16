@@ -1,5 +1,4 @@
 var players = require('./lobbyHandler.js').players;
-const gameManager = require('./gameManager.js');
 
 const colors = ['red', 'yellow', 'blue', 'green'];
 const values = [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9];
@@ -58,8 +57,7 @@ DealCards = (socket) => {
 
 PlayCard = (turn, socket) => {
     pile.unshift(turn.card);
-    //gameManager.PlayCard(turn, socket);
-    //socket.emit('placeCard', turn);
+    socket.emit('placeCard', turn);
 };
 
 module.exports = {
