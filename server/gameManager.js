@@ -28,6 +28,14 @@ PlayCard = (turn, socket) => {
     socket.emit('placeCard', turn);
 }
 
+DrawOneCard = (playerID, socket) => {
+    let card = deck.DrawCard();
+    socket.emit('drawCard', {
+        card : card,
+        player : playerID
+    });
+}
+
 TurnIncrementer = (num) => {
     currentTurnIndex += num * isClockwise;
     if (currentTurnIndex >= players.length) {
@@ -46,5 +54,6 @@ ResetGame = () => {
 module.exports = {
     StartGame : StartGame,
     PlayCard : PlayCard,
-    ResetGame : ResetGame
+    ResetGame : ResetGame,
+    DrawOneCard : DrawOneCard
 }

@@ -61,5 +61,6 @@ PlayCard = (turn) => {
 
 module.exports = {
     ShuffleDeck : ShuffleDeck,
-    PlayCard : PlayCard
+    PlayCard : PlayCard,
+    DrawCard : DrawCard
 }

@@ -42,10 +42,14 @@ io.on('connection', (socket) => {
 
     socket.on('resetGame', () => {
         gameManager.ResetGame();
-    })
+    });
 
     socket.on('playCard', (turn) => {
         gameManager.PlayCard(turn, io.sockets);
+    });
+
+    socket.on('drawCard', (player) => {
+        gameManager.DrawOneCard(player.playerID, io.sockets);
     });
 });
 

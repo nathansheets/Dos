@@ -112,7 +112,7 @@ class App extends React.Component {
     }
 
     DrawCard() {
-        console.log('hi');
+        socket.emit('drawCard', { playerID : this.state.playerID});
     }
 
     RenderPile() {
