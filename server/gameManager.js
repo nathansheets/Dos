@@ -1,4 +1,5 @@
-const players = require('./lobbyHandler.js').players;
+var players = require('./lobbyHandler.js').players;
+var playerNames = require('./lobbyHandler.js').playerNames;
 var deck = require('./deck.js');
 
 var gameStarted = false;
@@ -8,11 +9,11 @@ var isClockwise = 1;
 StartGame = (sockets) => {
     console.log('Starting game.');
     gameStarted = true;
-    //deck.ShuffleDeck(sockets);
+    deck.ShuffleDeck(sockets);
 }
 
 PlayCard = (turn, socket) => {
-    deck.PlayCard(turn, socket);
+    deck.PlayCard(turn);
 
     if (turn.card.value === 'reverse') {
         isClockwise = isClockwise === 1 ? -1 : 1;
@@ -22,7 +23,8 @@ PlayCard = (turn, socket) => {
     } else {
         TurnIncrementer(1);
     }
-    turn.currentTurn = players[currentTurnIndex];
+    turn.currentTurnID = players[currentTurnIndex];
+    turn.currentTurnName = playerNames[currentTurnIndex];
     socket.emit('placeCard', turn);
 }
 
@@ -36,7 +38,13 @@ TurnIncrementer = (num) => {
     return currentTurnIndex;
 }
 
+ResetGame = () => {
+    console.log('Resetting game.');
+    players = [];
+}
+
 module.exports = {
     StartGame : StartGame,
-    PlayCard : PlayCard
+    PlayCard : PlayCard,
+    ResetGame : ResetGame
 }

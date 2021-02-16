@@ -7,22 +7,41 @@ const Card = ({card, PlayCard}) => {
         }
     }
 
-    return (
-        <div className="card" onClick={ClickHandler}>
-            <div className="cardFace" style={{backgroundColor:card.color}}>
-                <div className="innerCircle">.</div>
-                <div className="topLeft">
-                    {card.value}
-                </div>
-                <div className="middle">
-                    {card.value}
-                </div>
-                <div className="bottomRight">
-                    {card.value}
+    if (card) {
+        return (
+            <div className="card" onClick={ClickHandler}>
+                <div className="cardFace" style={{backgroundColor:card.color}}>
+                    <div className="innerCircle">.</div>
+                    <div className="topLeft">
+                        {card.value}
+                    </div>
+                    <div className="middle">
+                        {card.value}
+                    </div>
+                    <div className="bottomRight">
+                        {card.value}
+                    </div>
                 </div>
             </div>
-        </div>
-    )
+        )
+    } else {
+        return (
+            <div className="card" onClick={ClickHandler}>
+                <div className="cardFace" style={{backgroundColor:'black'}}>
+                    <div className="innerCircle">.</div>
+                    <div className="topLeft">
+                        Dos
+                    </div>
+                    <div className="middle">
+                        Dos
+                    </div>
+                    <div className="bottomRight">
+                        Dos
+                    </div>
+                </div>
+            </div>
+        )
+    }
 }
 
 export default Card;

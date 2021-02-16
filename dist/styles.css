@@ -89,4 +89,5 @@
 
 #pileContainer {
     pointer-events: none;
+    display: flex;
 }

@@ -16,7 +16,6 @@ app.use(bp.urlencoded({extended: true}));
 app.use(express.static(path.join(__dirname, '../dist')));
 
 const lobby = require('./lobbyHandler.js');
-const deck = require('./deck.js');
 const gameManager = require('./gameManager.js');
 
 const io = socket(app.listen(PORT, () => {
@@ -33,22 +32,21 @@ io.on('connection', (socket) => {
         lobby.removePlayer(id);
     });
 
-    socket.on('joinGame', (id) => {
-        var isHost = lobby.addPlayer(id);
-        if (isHost) {
-            socket.emit('host', 'You are host!');
-        }
+    socket.on('joinGame', (player) => {
+        lobby.addPlayer(player, socket);
     });
 
-    socket.on('startGame', (x) => {
+    socket.on('startGame', () => {
         gameManager.StartGame(io.sockets);
-        console.log('Starting game.');
-        deck.ShuffleDeck(io.sockets);
+    });
+
+    socket.on('resetGame', () => {
+        gameManager.ResetGame();
     })
 
     socket.on('playCard', (turn) => {
         gameManager.PlayCard(turn, io.sockets);
-    })
+    });
 });
 
 app.get('/', (req, res) => {

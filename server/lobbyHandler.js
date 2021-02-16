@@ -1,10 +1,13 @@
 var players = [];
+var playerNames = [];
 
-const addPlayer = (id) => {
-    players.push(id);
-    console.log(players);
+const addPlayer = (player, socket) => {
+    players.push(player.playerID);
+    playerNames.push(player.playerName);
+
+    console.log(players, playerNames);
     if (players.length === 1) {
-        return true;
+        socket.emit('host', 'You are host!');
     }
 }
 
@@ -17,6 +20,7 @@ const removePlayer = (id) => {
 
 module.exports = {
     players : players,
+    playerNames : playerNames,
     addPlayer : addPlayer,
     removePlayer : removePlayer
 }

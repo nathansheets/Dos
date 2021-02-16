@@ -55,9 +55,8 @@ DealCards = (socket) => {
     }
 };
 
-PlayCard = (turn, socket) => {
+PlayCard = (turn) => {
     pile.unshift(turn.card);
-    socket.emit('placeCard', turn);
 };
 
 module.exports = {

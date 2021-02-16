@@ -11,20 +11,19 @@ class App extends React.Component {
 
         this.state = {
             playerID : 0,
+            playerName : '',
             isHost : false,
             cards : [],
             pile : [],
-            currentTurn : false
+            currentTurn : false,
+            currentTurnName : ''
         };
     }
 
     componentDidMount() {
         socket = socketHandler.getSocket();
-        var id = socketHandler.joinGame(socket);
 
-        this.setState({
-            playerID: id
-        });
+        window.setTimeout(this.GetPlayerName.bind(this), 1000);
 
         socket.on('host', (x) => {
             console.log(x);
@@ -50,36 +49,70 @@ class App extends React.Component {
 
             let isThisTurn = false;
 
-            if (turn.currentTurn === this.state.playerID) {
+            if (turn.currentTurnID === this.state.playerID) {
                 isThisTurn = true;
             }
             this.setState({
                 pile : newPile,
-                currentTurn : isThisTurn
+                currentTurn : isThisTurn,
+                currentTurnName : turn.currentTurnName
             });
         })
+    }
+
+    GetPlayerName() {
+        var name = window.prompt("Enter your name: ");
+        var id = Math.floor(Math.random() * Math.floor(999999999999));
+
+        var player = {
+            playerName : name,
+            playerID : id
+        }
+
+        this.setState(player);
+        socket.emit('joinGame', player);
     }
 
     StartGame() {
         socket.emit('startGame', 'startGame');
     }
 
+    ResetGame() {
+        socket.emit('resetGame', 'resetGame');
+    }
+
     PlayCard(card) {
+        // Don't allow player to place card if it's not their turn
         if (!this.state.currentTurn) {
             return;
         }
+
+        // Check if card is valid (matches color or value)
+        if (this.state.pile.length > 0) {
+            let topCard = this.state.pile[0];
+            if (card.value !== topCard.value && card.color !== topCard.color) {
+                return;
+            }
+        }
+
+        // Remove card from hand
         let tempCards = this.state.cards;
         let index = tempCards.indexOf(card);
         tempCards.splice(index, 1);
         this.setState({
             cards: tempCards
         });
-
+        
+        // Transmit turn object to server
         var turn = {
             card: card,
             player: this.state.playerID
         };
         socket.emit('playCard', turn);
+    }
+
+    DrawCard() {
+        console.log('hi');
     }
 
     RenderPile() {
@@ -97,9 +130,12 @@ class App extends React.Component {
     render() {
         return (
             <div id="mainWindow">
-                <StartButton isHost={this.state.isHost} StartGame={this.StartGame}/>
-                {this.RenderTurnIndicator()}
+                <StartButton isHost={this.state.isHost} StartGame={this.StartGame} ResetGame={this.ResetGame}/>
+                <div>
+                    It's {this.state.currentTurnName}'s turn!
+                </div>
                 <div id="pileContainer">
+                    <Card PlayCard={this.DrawCard.bind(this)} />
                     {this.RenderPile()}
                 </div>
                 <div id="handContainer">
