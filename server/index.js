@@ -21,7 +21,7 @@ const gameManager = require('./gameManager.js');
 
 const io = socket(app.listen(PORT, () => {
     console.log(`DOOT DOOT, we\'re listening on port ${PORT}`);
-}))
+}));
 
 io.on('connection', (socket) => {
     console.log('Connected');
@@ -49,4 +49,8 @@ io.on('connection', (socket) => {
     socket.on('playCard', (turn) => {
         gameManager.PlayCard(turn, io.sockets);
     })
+});
+
+app.get('/', (req, res) => {
+    res.end();
 })
