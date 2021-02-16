@@ -17,6 +17,7 @@ app.use(express.static(path.join(__dirname, '../dist')));
 
 const lobby = require('./lobbyHandler.js');
 const deck = require('./deck.js');
+const gameManager = require('./gameManager.js');
 
 const io = socket(app.listen(PORT, () => {
     console.log(`DOOT DOOT, we\'re listening on port ${PORT}`);
@@ -32,10 +33,6 @@ io.on('connection', (socket) => {
         lobby.removePlayer(id);
     });
 
-    socket.on('deck', (deck) => {
-        console.log(deck);
-    });
-
     socket.on('joinGame', (id) => {
         var isHost = lobby.addPlayer(id);
         if (isHost) {
@@ -44,7 +41,12 @@ io.on('connection', (socket) => {
     });
 
     socket.on('startGame', (x) => {
+        gameManager.StartGame(io.sockets);
         console.log('Starting game.');
-        deck.ShuffleDeck(socket);
+        deck.ShuffleDeck(io.sockets);
+    })
+
+    socket.on('playCard', (turn) => {
+        gameManager.PlayCard(turn, io.sockets);
     })
 })

@@ -1,18 +1,24 @@
 import React from 'react';
 
-const Card = ({color, value}) => {
+const Card = ({card, PlayCard}) => {
+    function ClickHandler() {
+        if (PlayCard) {
+            PlayCard(card);
+        }
+    }
+
     return (
-        <div className="card">
-            <div className="cardFace" style={{backgroundColor:color}}>
+        <div className="card" onClick={ClickHandler}>
+            <div className="cardFace" style={{backgroundColor:card.color}}>
                 <div className="innerCircle">.</div>
                 <div className="topLeft">
-                    {value}
+                    {card.value}
                 </div>
                 <div className="middle">
-                    {value}
+                    {card.value}
                 </div>
                 <div className="bottomRight">
-                    {value}
+                    {card.value}
                 </div>
             </div>
         </div>
