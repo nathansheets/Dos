@@ -2,14 +2,13 @@ import React from 'react';
 import Card from './card.jsx';
 import HandHandler from './handHandler.jsx';
 import StartButton from './startButton.jsx';
+import PlayerList from './players.jsx';
 import { io } from "socket.io-client";
 const socket = io();
+
 var waitingForColor = false;
 var playerID;
-/*
-handle cards server side
-require users to answer question prompt
-*/
+
 class App extends React.Component {
     constructor(props) {
         super(props);
@@ -20,7 +19,8 @@ class App extends React.Component {
             cards : [],
             pile : [],
             currentTurn : false,
-            currentTurnName : ''
+            currentTurnName : '',
+            players : []
         };
     }
 
@@ -42,6 +42,15 @@ class App extends React.Component {
                 newCards.push(card.card);
                 this.setState({
                     cards: newCards
+                });
+            } 
+            if (!this.state.players.includes(card.playerName)) {
+                console.log(card);
+                let tempPlayers = this.state.players;
+                console.log(tempPlayers);
+                tempPlayers.push(card.playerName);
+                this.setState({
+                    players : tempPlayers
                 });
             }
         });
@@ -182,6 +191,9 @@ class App extends React.Component {
                 <StartButton isHost={this.state.isHost} StartGame={this.StartGame} ResetGame={this.ResetGame}/>
                 <div id="turnIndicator">
                     {this.RenderTurnIndicator()}
+                </div>
+                <div id="playerList">
+                    <PlayerList players={this.state.players} currentTurn={this.state.currentTurnName}/>
                 </div>
                 <div id="pileContainer">
                     <Card PlayCard={this.DrawCard.bind(this)} />

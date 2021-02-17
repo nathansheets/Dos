@@ -116,3 +116,20 @@ body {
 #deck:hover {
     margin: 0;
 }
+
+#playerList {
+    float: right;
+    text-align: left;
+    width: 300px;
+}
+
+.playerIcon {
+    display: flex;
+    font-size: 20pt;
+    text-align: right;
+}
+
+#arrowIcon {
+    width: 50px;
+    margin-left: -50px;
+}

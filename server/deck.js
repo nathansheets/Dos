@@ -43,12 +43,13 @@ DrawCard = () => {
     return deck.pop();
 };
 
-DealCards = (socket, players) => {
+DealCards = (socket, players, playerNames) => {
     for (let i = 0; i < 7; i++) {
-        for (let player of players) {
+        for (let i = 0; i < players.length; i++) {
             socket.emit('drawCard', {
                 card : DrawCard(),
-                player: player
+                player: players[i],
+                playerName : playerNames[i]
             });
         }
     }

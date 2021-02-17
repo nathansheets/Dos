@@ -10,7 +10,7 @@ var lastCard;
 StartGame = (sockets) => {
     console.log('Starting game.');
     gameStarted = true;
-    deck.DealCards(sockets, players);
+    deck.DealCards(sockets, players, playerNames);
 }
 
 PlayCard = (turn, socket) => {
@@ -92,6 +92,9 @@ ResetGame = () => {
 }
 
 AddPlayer = (player, socket) => {
+    if (player.playerName === undefined || player.playerID === undefined) {
+        return;
+    }
     if (!gameStarted && player.playerName) {
         players.push(player.playerID);
         playerNames.push(player.playerName);
