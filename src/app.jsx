@@ -20,7 +20,8 @@ class App extends React.Component {
             pile : [],
             currentTurn : false,
             currentTurnName : '',
-            players : []
+            players : [],
+            winner : ''
         };
     }
 
@@ -101,7 +102,13 @@ class App extends React.Component {
                     playerID : this.playerID
                 });
             }
-        })
+        });
+
+        socket.on('gameOver', (playerName) => {
+            this.setState({
+                winner: playerName
+            });
+        });
     }
 
     GetPlayerName() {
@@ -146,6 +153,13 @@ class App extends React.Component {
         this.setState({
             cards: tempCards
         });
+
+        if (this.state.cards.length === 0) {
+            socket.emit('win', {
+                playerID : this.playerID,
+                playerName : this.state.playerName
+            });
+        }
         
         // Transmit turn object to server
         var turn = {
@@ -170,6 +184,13 @@ class App extends React.Component {
     }
 
     RenderTurnIndicator() {
+        if (this.state.winner !== '') {
+            return (
+                <div>
+                    {this.state.winner} wins!
+                </div>
+            )
+        }
         if (this.state.currentTurnName) {
             return (
             <div>

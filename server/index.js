@@ -54,7 +54,11 @@ io.on('connection', (socket) => {
 
     socket.on('chooseColor', (color) => {
         gameManager.ChooseColor(color, io.sockets);
-    })
+    });
+
+    socket.on('win', (player) => {
+        gameManager.Win(player, io.sockets);
+    });
 });
 
 app.get('/', (req, res) => {

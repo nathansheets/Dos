@@ -127,6 +127,11 @@ PingPlayers = (socket) => {
     socket.emit('ping');
 }
 
+Win = (player, socket) => {
+    gameStarted = false;
+    socket.emit('gameOver', player.playerName);
+}
+
 module.exports = {
     StartGame : StartGame,
     PlayCard : PlayCard,
@@ -136,5 +141,6 @@ module.exports = {
     RemovePlayer : RemovePlayer,
     players : players,
     ChooseColor : ChooseColor,
-    PingPlayers : PingPlayers
+    PingPlayers : PingPlayers,
+    Win : Win
 }
