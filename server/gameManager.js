@@ -10,7 +10,7 @@ var lastCard;
 StartGame = (sockets) => {
     console.log('Starting game.');
     gameStarted = true;
-    deck.ShuffleDeck(sockets, players);
+    deck.DealCards(sockets, players);
 }
 
 PlayCard = (turn, socket) => {
@@ -92,7 +92,7 @@ ResetGame = () => {
 }
 
 AddPlayer = (player, socket) => {
-    if (!gameStarted) {
+    if (!gameStarted && player.playerName) {
         players.push(player.playerID);
         playerNames.push(player.playerName);
 
@@ -105,9 +105,23 @@ AddPlayer = (player, socket) => {
 
 RemovePlayer = (id) => {
     var index = players.indexOf(id);
+    console.log(`Removing ${playerNames[index]}.`)
     if (index !== -1) {
         players.splice(index, 1);
+        playerNames.splice(index, 1);
     }
+}
+
+PingPlayers = (socket) => {
+    let host = {
+        name : playerNames[0],
+        id : players[0]
+    };
+
+    players = [host.id];
+    playerNames = [host.name];
+
+    socket.emit('ping');
 }
 
 module.exports = {
@@ -118,5 +132,6 @@ module.exports = {
     AddPlayer : AddPlayer,
     RemovePlayer : RemovePlayer,
     players : players,
-    ChooseColor : ChooseColor
+    ChooseColor : ChooseColor,
+    PingPlayers : PingPlayers
 }

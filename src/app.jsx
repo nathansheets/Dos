@@ -2,16 +2,19 @@ import React from 'react';
 import Card from './card.jsx';
 import HandHandler from './handHandler.jsx';
 import StartButton from './startButton.jsx';
-const socketHandler = require('./socketHandler.js');
-var socket;
+import { io } from "socket.io-client";
+const socket = io();
 var waitingForColor = false;
-
+var playerID;
+/*
+handle cards server side
+require users to answer question prompt
+*/
 class App extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            playerID : 0,
             playerName : '',
             isHost : false,
             cards : [],
@@ -22,9 +25,7 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        socket = socketHandler.getSocket();
-
-        window.setTimeout(this.GetPlayerName.bind(this), 1000);
+        window.setTimeout(this.GetPlayerName.bind(this), 100);
 
         socket.on('host', (x) => {
             console.log(x);
@@ -36,7 +37,7 @@ class App extends React.Component {
 
         socket.on('drawCard', (card) => {
             card.playerName ? console.log(`${card.playerName} drew a card!`) : null;
-            if (card.player === this.state.playerID) {
+            if (card.player === this.playerID) {
                 let newCards = this.state.cards;
                 newCards.push(card.card);
                 this.setState({
@@ -82,16 +83,25 @@ class App extends React.Component {
             } else {
                 waitingForColor = true;
             }
+        });
+
+        socket.on('ping', () => {
+            if (!this.state.isHost) {
+                socket.emit('joinGame', {
+                    playerName: this.state.playerName,
+                    playerID : this.playerID
+                });
+            }
         })
     }
 
     GetPlayerName() {
         var name = window.prompt("Enter your name: ");
-        var id = Math.floor(Math.random() * Math.floor(999999999999));
+        this.playerID = Math.floor(Math.random() * Math.floor(999999999999));
 
         var player = {
             playerName : name,
-            playerID : id
+            playerID : this.playerID
         }
 
         this.setState(player);
@@ -131,13 +141,13 @@ class App extends React.Component {
         // Transmit turn object to server
         var turn = {
             card: card,
-            player: this.state.playerID
+            player: this.playerID
         };
         socket.emit('playCard', turn);
     }
 
     DrawCard() {
-        socket.emit('drawCard', { playerID : this.state.playerID});
+        socket.emit('drawCard', { playerID : this.playerID});
     }
 
     RenderPile() {
@@ -151,8 +161,18 @@ class App extends React.Component {
     }
 
     RenderTurnIndicator() {
-        if (this.state.currentTurn) {
-            return <div>It's your turn!</div>
+        if (this.state.currentTurnName) {
+            return (
+            <div>
+                It's {this.state.currentTurnName}'s turn!
+            </div>
+            );
+        } else {
+            return (
+            <div>
+                Waiting for host to start.
+            </div>
+            );
         }
     }
 
@@ -160,8 +180,8 @@ class App extends React.Component {
         return (
             <div id="mainWindow">
                 <StartButton isHost={this.state.isHost} StartGame={this.StartGame} ResetGame={this.ResetGame}/>
-                <div>
-                    It's {this.state.currentTurnName}'s turn!
+                <div id="turnIndicator">
+                    {this.RenderTurnIndicator()}
                 </div>
                 <div id="pileContainer">
                     <Card PlayCard={this.DrawCard.bind(this)} />
@@ -176,7 +196,7 @@ class App extends React.Component {
 }
 
 window.addEventListener('beforeunload', (event) => {
-    socketHandler.leaveGame();
+    socket.emit('leaveGame', this.playerID);
 })
 
 export default App;

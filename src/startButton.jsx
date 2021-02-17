@@ -12,7 +12,7 @@ const StartButton = ({ isHost, StartGame, ResetGame }) => {
     } else {
         return (
             <div>
-                You are not host.
+                
             </div>
         )
     }

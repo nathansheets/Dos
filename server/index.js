@@ -25,6 +25,7 @@ io.on('connection', (socket) => {
     console.log('Connected');
     socket.on('disconnect', (id) => {
         console.log('Disconnected');
+        gameManager.PingPlayers(io.sockets);
     });
 
     socket.on('leaveGame', (id) => {

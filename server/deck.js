@@ -33,11 +33,13 @@ ShuffleDeck = (socket, players) => {
         .map((a) => ({sort: Math.random(), value: a}))
         .sort((a, b) => a.sort - b.sort)
         .map((a) => a.value)
-
-    DealCards(socket, players);
 };
 
 DrawCard = () => {
+    if (deck.length < 5) {
+        ShuffleDeck();
+        console.log('Adding more cards to the deck');
+    }
     return deck.pop();
 };
 
@@ -54,5 +56,6 @@ DealCards = (socket, players) => {
 
 module.exports = {
     ShuffleDeck : ShuffleDeck,
-    DrawCard : DrawCard
+    DrawCard : DrawCard,
+    DealCards : DealCards
 }
