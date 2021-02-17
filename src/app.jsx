@@ -229,7 +229,7 @@ class App extends React.Component {
 }
 
 window.addEventListener('beforeunload', (event) => {
-    socket.emit('leaveGame', this.playerID);
+    //socket.emit('leaveGame', this.playerID);
 })
 
 export default App;
