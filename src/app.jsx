@@ -4,6 +4,7 @@ import HandHandler from './handHandler.jsx';
 import StartButton from './startButton.jsx';
 const socketHandler = require('./socketHandler.js');
 var socket;
+var waitingForColor = false;
 
 class App extends React.Component {
     constructor(props) {
@@ -34,6 +35,7 @@ class App extends React.Component {
         });
 
         socket.on('drawCard', (card) => {
+            card.playerName ? console.log(`${card.playerName} drew a card!`) : null;
             if (card.player === this.state.playerID) {
                 let newCards = this.state.cards;
                 newCards.push(card.card);
@@ -57,6 +59,29 @@ class App extends React.Component {
                 currentTurn : isThisTurn,
                 currentTurnName : turn.currentTurnName
             });
+        });
+
+        socket.on('chooseColor', (playerID, colorToChange) => {
+            if (playerID === this.state.playerID) {
+                var colors = ['green', 'blue', 'yellow', 'red'];
+                var color;
+                while(!colors.includes(color)) {
+                    color = window.prompt('Choose a color (green/blue/yellow/red): ');
+                    color = color.toLowerCase();
+                }
+
+                socket.emit('chooseColor', color);
+            }
+            if (colorToChange) {
+                waitingForColor = false;
+                var tempPile = this.state.pile;
+                tempPile[0].color = colorToChange;
+                this.setState({
+                    pile : tempPile
+                });
+            } else {
+                waitingForColor = true;
+            }
         })
     }
 
@@ -83,7 +108,7 @@ class App extends React.Component {
 
     PlayCard(card) {
         // Don't allow player to place card if it's not their turn
-        if (!this.state.currentTurn) {
+        if (!this.state.currentTurn || waitingForColor) {
             return;
         }
 

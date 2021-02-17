@@ -1,9 +1,23 @@
 import React from 'react';
 
 const Card = ({card, PlayCard}) => {
+    const style = {
+        transform: 'rotate(-60deg)', 
+        fontSize: '40pt', 
+        marginTop: '20%',
+        marginBottom: '25%',
+        textAlign: 'center',
+        height: '70px'
+    }
     function ClickHandler() {
         if (PlayCard) {
             PlayCard(card);
+        }
+    }
+
+    function IsRotated(value) {
+        if (value.length > 2) {
+            return style;
         }
     }
 
@@ -15,7 +29,7 @@ const Card = ({card, PlayCard}) => {
                     <div className="topLeft">
                         {card.value}
                     </div>
-                    <div className="middle">
+                    <div className="middle" style={IsRotated(card.value)}>
                         {card.value}
                     </div>
                     <div className="bottomRight">
@@ -32,7 +46,7 @@ const Card = ({card, PlayCard}) => {
                     <div className="topLeft">
                         Dos
                     </div>
-                    <div className="middle">
+                    <div className="middle" style={style}>
                         Dos
                     </div>
                     <div className="bottomRight">

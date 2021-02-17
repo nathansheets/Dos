@@ -15,7 +15,6 @@ app.use(bp.json());
 app.use(bp.urlencoded({extended: true}));
 app.use(express.static(path.join(__dirname, '../dist')));
 
-const lobby = require('./lobbyHandler.js');
 const gameManager = require('./gameManager.js');
 
 const io = socket(app.listen(PORT, () => {
@@ -29,11 +28,11 @@ io.on('connection', (socket) => {
     });
 
     socket.on('leaveGame', (id) => {
-        lobby.removePlayer(id);
+        gameManager.RemovePlayer(id);
     });
 
     socket.on('joinGame', (player) => {
-        lobby.addPlayer(player, socket);
+        gameManager.AddPlayer(player, socket);
     });
 
     socket.on('startGame', () => {
@@ -51,6 +50,10 @@ io.on('connection', (socket) => {
     socket.on('drawCard', (player) => {
         gameManager.DrawOneCard(player.playerID, io.sockets);
     });
+
+    socket.on('chooseColor', (color) => {
+        gameManager.ChooseColor(color, io.sockets);
+    })
 });
 
 app.get('/', (req, res) => {

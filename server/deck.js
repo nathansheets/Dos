@@ -1,5 +1,3 @@
-var players = require('./lobbyHandler.js').players;
-
 const colors = ['red', 'yellow', 'blue', 'green'];
 const values = [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9];
 const actions = ['+2', 'reverse', 'skip'];
@@ -11,9 +9,8 @@ const Card = function(color, value) {
 };
 
 var deck= [];
-var pile = [];
 
-ShuffleDeck = (socket) => {
+ShuffleDeck = (socket, players) => {
     var cards = [];
     for (let value of values) {
         for (let color of colors) {
@@ -37,14 +34,14 @@ ShuffleDeck = (socket) => {
         .sort((a, b) => a.sort - b.sort)
         .map((a) => a.value)
 
-    DealCards(socket);
+    DealCards(socket, players);
 };
 
 DrawCard = () => {
     return deck.pop();
 };
 
-DealCards = (socket) => {
+DealCards = (socket, players) => {
     for (let i = 0; i < 7; i++) {
         for (let player of players) {
             socket.emit('drawCard', {
@@ -55,12 +52,7 @@ DealCards = (socket) => {
     }
 };
 
-PlayCard = (turn) => {
-    pile.unshift(turn.card);
-};
-
 module.exports = {
     ShuffleDeck : ShuffleDeck,
-    PlayCard : PlayCard,
     DrawCard : DrawCard
 }
