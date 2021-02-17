@@ -88,6 +88,7 @@ ResetGame = () => {
     console.log('Resetting game.');
     gameStarted = false;
     players = [];
+    playerNames = [];
 }
 
 AddPlayer = (player, socket) => {
